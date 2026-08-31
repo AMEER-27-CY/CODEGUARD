@@ -41,8 +41,4 @@ Hardcoded API keys/secrets, AWS keys, `eval()`/`exec()`, shell
 injection (`shell=True`), SQL injection via string building, unsafe
 deserialization (`pickle`), debug mode left on, wildcard CORS, and
 weak hashing (MD5/SHA1).
- 
-## License
- 
-MIT
- 
+
