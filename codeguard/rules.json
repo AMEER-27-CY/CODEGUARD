@@ -1,0 +1,82 @@
+[
+  {
+    "id": "hardcoded-api-key",
+    "pattern": "(?i)(api[_-]?key|secret[_-]?key|access[_-]?token)\\s*=\\s*[\"'][A-Za-z0-9_\\-/+]{16,}[\"']",
+    "severity": "high",
+    "title": "Hardcoded API key or secret",
+    "why": "A secret written directly into source code gets committed to version control and can leak publicly (e.g. via a public GitHub repo), letting anyone use your API credits or access your accounts.",
+    "fix": "Load secrets from environment variables (os.environ) or a secrets manager, never write them directly in code."
+  },
+  {
+    "id": "hardcoded-aws-key",
+    "pattern": "AKIA[0-9A-Z]{16}",
+    "severity": "high",
+    "title": "Hardcoded AWS access key",
+    "why": "AWS access keys found in code (especially public repos) are one of the most common causes of cloud account takeovers and surprise billing.",
+    "fix": "Use environment variables or an IAM role instead of embedding AWS keys in code."
+  },
+  {
+    "id": "eval-usage",
+    "pattern": "\\beval\\s*\\(",
+    "severity": "high",
+    "title": "Use of eval()",
+    "why": "eval() runs whatever string is passed to it as code. If any part of that string comes from user input, an attacker can run arbitrary code on your server or app.",
+    "fix": "Avoid eval() entirely. Use ast.literal_eval() for safely parsing data, or a proper parser/dispatch table for logic."
+  },
+  {
+    "id": "exec-usage",
+    "pattern": "\\bexec\\s*\\(",
+    "severity": "high",
+    "title": "Use of exec()",
+    "why": "Like eval(), exec() runs arbitrary code from a string. This is a common way AI-generated code accidentally creates a remote code execution vulnerability.",
+    "fix": "Avoid exec(). Restructure the logic to not require running dynamically generated code."
+  },
+  {
+    "id": "shell-true",
+    "pattern": "shell\\s*=\\s*True",
+    "severity": "high",
+    "title": "subprocess call with shell=True",
+    "why": "When shell=True is combined with any user-controlled input, an attacker can inject extra shell commands (shell injection) and run anything on the host machine.",
+    "fix": "Use shell=False (the default) and pass command arguments as a list, e.g. subprocess.run(['ls', path])."
+  },
+  {
+    "id": "sql-string-concat",
+    "pattern": "(?i)(SELECT|INSERT|UPDATE|DELETE)\\s.+(\\+|%s|f[\"']).*(FROM|INTO|SET|WHERE)",
+    "severity": "high",
+    "title": "Possible SQL injection via string building",
+    "why": "Building SQL queries by concatenating or f-string-formatting variables directly into the query lets an attacker inject their own SQL and read or modify data they shouldn't have access to.",
+    "fix": "Use parameterized queries (e.g. cursor.execute('SELECT * FROM users WHERE id = ?', (user_id,))) instead of building the query string manually."
+  },
+  {
+    "id": "insecure-deserialization",
+    "pattern": "pickle\\.loads?\\(",
+    "severity": "medium",
+    "title": "Use of pickle for deserialization",
+    "why": "Unpickling data from an untrusted source can execute arbitrary code — pickle is not a safe format for data you don't fully control.",
+    "fix": "Use a safe format like JSON for data interchange, or validate the source is fully trusted before unpickling."
+  },
+  {
+    "id": "debug-true",
+    "pattern": "(?i)debug\\s*=\\s*True",
+    "severity": "medium",
+    "title": "Debug mode enabled",
+    "why": "Leaving debug mode on in a deployed app (e.g. Flask/Django) can expose stack traces, source code, and internal environment details to anyone who triggers an error.",
+    "fix": "Ensure debug is set to False (or driven by an environment variable that defaults to False) before deploying."
+  },
+  {
+    "id": "wildcard-cors",
+    "pattern": "Access-Control-Allow-Origin[\"']?\\s*[:=]\\s*[\"']\\*[\"']",
+    "severity": "medium",
+    "title": "Wildcard CORS policy",
+    "why": "Allowing any website (*) to make authenticated requests to your API can let a malicious site read data on behalf of your logged-in users.",
+    "fix": "Restrict Access-Control-Allow-Origin to a specific list of trusted domains."
+  },
+  {
+    "id": "weak-hash",
+    "pattern": "(?i)hashlib\\.(md5|sha1)\\(",
+    "severity": "low",
+    "title": "Weak hashing algorithm (MD5/SHA1)",
+    "why": "MD5 and SHA1 are broken for security purposes (collisions are practical to generate) and should not be used for passwords or integrity checks.",
+    "fix": "Use bcrypt/argon2 for passwords, and SHA-256 or better for integrity/checksum purposes."
+  }
+]

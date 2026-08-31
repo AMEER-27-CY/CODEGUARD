@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+ 
+[project]
+name = "codeguard"
+version = "0.1.0"
+description = "A local, offline-first security scanner for AI-generated code."
+requires-python = ">=3.8"
+dependencies = []
+ 
+[project.optional-dependencies]
+ai = ["anthropic"]
+ 
+[project.scripts]
+codeguard = "codeguard.cli:main"
+ 
+[tool.setuptools]
+packages = ["codeguard"]
+ 
+[tool.setuptools.package-data]
+codeguard = ["rules.json"]
+ 
