@@ -7,6 +7,7 @@ small teams who build apps using AI tools (Lovable, Cursor, Bolt, Replit,
 Copilot) but have no way to check whether the code their AI wrote is
 actually safe before shipping it.
 
+---
 
 ## Why this exists
 
@@ -28,6 +29,8 @@ security issue — including exposed secrets and injection vulnerabilities.
 | Built for | Security teams | Individuals with no security background |
 
 CodeGuard **never executes the code it scans** — it only reads it as text.
+
+---
 
 ## Supported languages
 
@@ -51,6 +54,7 @@ broader per-language coverage is on the roadmap.
 - Wildcard CORS policy
 - Weak hashing (MD5/SHA1)
 
+---
 
 ## Installation
 
@@ -70,26 +74,31 @@ broader per-language coverage is on the roadmap.
 
 That's it — installed once, works from anywhere on your machine afterward.
 
+---
 
 ## Usage
 
+```bash
 codeguard scan myfile.py            # scan one file
 codeguard scan .                    # scan every file in the current folder
 codeguard scan . --json             # machine-readable output
 codeguard scan . --explain          # AI-written explanations (needs ANTHROPIC_API_KEY set)
-
+```
 
 ### If the `codeguard` command isn't recognized
 
 Some Windows setups don't automatically add the command to PATH. Use this
 instead — it works identically, no setup needed:
 
+```bash
 python -m codeguard.cli scan myfile.py
+```
 
 (On Windows, use `py` instead of `python` if that's what your system uses.)
 
 ### Example output
 
+```
 API_KEY = "sk-live-8f3a9b2c1d4e5f6a7b8c9d0e"
 
 [HIGH] Hardcoded API key or secret
@@ -98,7 +107,9 @@ API_KEY = "sk-live-8f3a9b2c1d4e5f6a7b8c9d0e"
   Why: A secret written directly into source code gets committed to
        version control and can leak publicly.
   Fix: Load secrets from environment variables instead.
+```
 
+---
 
 ## Troubleshooting
 
@@ -117,6 +128,7 @@ wherever you extracted/cloned it) before running the scan command.
 The install step hasn't completed yet — run `pip install -e .` (or
 `py -m pip install -e .` on Windows) from inside the project folder.
 
+---
 
 ## Roadmap
 
@@ -124,7 +136,3 @@ The install step hasn't completed yet — run `pip install -e .` (or
 - Scan history and security-score trend tracking
 - Auto-fix suggestions for common patterns
 - Git pre-commit hook integration
-
-Output
-
-written
